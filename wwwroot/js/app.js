@@ -133,3 +133,37 @@ window.scrollCarouselToPage = (innerElement, pageIndex, itemsPerPage) => {
     innerElement.classList.add('transition-transform');
     innerElement.style.transform = `translateX(${translate}px)`;
 };
+
+// Add this to your app.js file
+let dotKeyPressCount = 0;
+let lastKeyPressTime = 0;
+
+window.initKeyHandler = function () {
+    document.addEventListener('keydown', function (event) {
+        const currentTime = new Date().getTime();
+
+        // Check if it's the "." key (period)
+        if (event.key === '.') {
+            // Check if this is within 1.5 seconds of the last key press
+            if (currentTime - lastKeyPressTime < 1500) {
+                dotKeyPressCount++;
+            } else {
+                // Reset counter if too much time has passed
+                dotKeyPressCount = 1;
+            }
+
+            lastKeyPressTime = currentTime;
+
+            // Check if we've reached 3 presses
+            if (dotKeyPressCount === 3) {
+                // Show the weekly tracker button
+                const trackerButton = document.getElementById('weekly-tracker-button');
+                if (trackerButton) {
+                    trackerButton.classList.remove('hidden');
+                    trackerButton.classList.add('fade-in');
+                }
+                dotKeyPressCount = 0; // Reset counter
+            }
+        }
+    });
+}
